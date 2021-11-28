@@ -1,7 +1,7 @@
 TOUCHPAD=$(xinput list   | grep "Touchpad" | cut -d"=" -f2 | cut -f1)
-TAPP_ON_CLICK=$(xinput list-props 12   | grep "Tapping Enabled (" | cut -d"(" -f2 | cut -d")" -f1)
-NATURAL_SCROLL=$(xinput list-props 12   | grep "Natural Scrolling Enabled (" | cut -d"(" -f2 | cut -d")" -f1)
-DRAG=$(xinput list-props 12   | grep "Tapping Drag Enabled (" | cut -d"(" -f2 | cut -d")" -f1)
+TAPP_ON_CLICK=$(xinput list-props ${TOUCHPAD}   | grep "Tapping Enabled (" | cut -d"(" -f2 | cut -d")" -f1)
+NATURAL_SCROLL=$(xinput list-props ${TOUCHPAD}   | grep "Natural Scrolling Enabled (" | cut -d"(" -f2 | cut -d")" -f1)
+DRAG=$(xinput list-props ${TOUCHPAD}   | grep "Tapping Drag Enabled (" | cut -d"(" -f2 | cut -d")" -f1)
 
 # get list of input devices: `xinput list` - to get numbre of touchpad
 # get list of property: `xinput list-propers`

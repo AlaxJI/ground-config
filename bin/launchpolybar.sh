@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # Внимание! Этот скрипт нужен для запуска polybar, он используется в конфигурационном файле Bspwm для автозапуска.
 
-$HOME/ground-config/bin/xrandr3m.sh
+killall -q polybar
 
-POLYBAR_CONFIG="$HOME/ground-config/polybar.conf"
+#$HOME/ground-config/bin/xrandr3m.sh
+
+POLYBAR_CONFIG="$HOME/ground-config/config/polybar/polybar.conf"
 
 echo "polybar -c $POLYBAR_CONFIG ${1}top"
 

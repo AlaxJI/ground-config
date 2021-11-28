@@ -1,66 +1,111 @@
-#
+###########################
 # wm independent hotkeys
-#
-
-# alt is ctrl
-# super is mod1
-# ctrl is mod4
-
-
-#    Like Apple
-#|--------|--------|--------|
-#|        |        |        |
-#|  Super |   Alt  |  Ctrl  |
-#|        |        |        |
-#|--------|--------|--------|
-#|--------|--------|--------|
-#|        |        |        |
-#|  Mod4  |  Mod1  |  Ctrl  |
-#|        |        |        |
-#|--------|--------|--------|
-#|--------|--------|--------|
-#|        |        |        |
-#| Control| Option | Command|
-#|        |        |        |
-#|--------|--------|--------|
+###########################
 
 # terminal emulator
-ctrl + Return
+super + alt + Return
 	kitty
+#	xfce4-terminal
+#	termite
 
-# program launcher
-mod1 + Tab
-	rofi -show window -show-icons -drun-icon-theme Mojave-CT-Night-Mode
+# rofi program launcher
+super + space
+	rofi -show drun
 
-ctrl + space
-	/home/alaxji/.config/rofi/launchers/slate/launcher.sh
+super + d
+	xfce4-appfinder
 
-# make sxhkd reload its configuration files:
-ctrl + Escape
+# rofi program launcher
+alt + Tab
+	rofi -show window
+
+# whisker menu
+# {Super_L,Super_R}
+#	xfce4-popup-whiskermenu
+
+# thunar
+alt + f
+	thunar
+
+# firefox
+alt + i
+	firefox
+
+# tellico
+alt + t
+	tellico
+
+###########################
+# bspwm hotkeys
+###########################
+
+# make sxhkd reload its configuration files
+alt + Escape
 	pkill -USR1 -x sxhkd
 
-#get window i3 criteria
-ctrl + F12
-	~/i3-get-window-criteria
+# reload bspwmrc configuration file
+#alt + b
+#	pkill docky; $HOME/.config/bspwm/bspwmrc; docky
 
-###MY BINDS###
-mod1 + shift + n
+# close window
+super + q
+	bspc node -c
 
-mod1 + shift + t
-	telegram-desktop
+# move focused window to the next workspace and then switch to that workspace
+alt + shift + {Left,Right}
+	id=$(bspc query --nodes --node); bspc node --to-desktop {prev,next}; bspc desktop --focus next; bspc node --focus ${id}
 
-mod1 + shift + b
-	boostnote
+# set the node flag to private
+#alt + p
+#bspc node -g private
 
-mod1 + shift + d
-	discord
+# === function keys ===
 
-mod1 + shift + c
-	gnome-calculator
+# rotate windows
+F1
+	bspc node @/ -R 90
 
-#    codium
+# circulate windows
+F2
+	bspc node @/ -C forward
 
-# Sound
+# flip windows horizontal
+F3
+	bspc node @/ -F horizontal
+
+# flip windows vertical
+F4
+	bspc node @/ -F vertical
+
+# alternate between the tiled and monocle layout
+F5
+	bspc desktop -l next
+
+# balance windows
+F6
+	bspc node @/ -B
+
+# Change window gap
+{F7,F8}
+	bspc config -d focused window_gap $((`bspc config -d focused window_gap` {+,-} 2 ))
+
+# set the window state
+{F9,F10,F11,F12}
+	bspc node -t {floating,tiled,pseudo_tiled,fullscreen}
+
+# === focus/swap ===
+
+# focus the next/previous node
+super + {Up,Down}
+	bspc node -f {prev,next}.local.!above
+
+# focus the next/previous desktop
+super + {Left,Right}
+	bspc desktop -f {prev,next}.local
+
+###########################
+# Sound key
+###########################
 XF86AudioMute
 	amixer sset Master toggle
 
@@ -90,178 +135,3 @@ XF86AudioStop
 
 XF86AudioPause
 	playerctl pause
-
-# Turn on screen
-ctrl + shift + o
-	xrandr --output eDP-1 --auto
-
-# Screenshot
-Print
-	scrot ~/Pictures/"Screenshot `date +%F_%R`".png
-
-#############################
-# bspwm hotkeyss
-#############################
-
-# Выйти из bspwm 
-ctrl + shift + q
-	/home/alaxji/.config/rofi/powermenu/powermenu.sh
-
-mod1 + shift + q
-	/home/alaxji/.config/rofi/powermenu/powermenu.sh
-
-# Закрыть данное окно
-# ctrl + q
-#	bspc node -с
-
-ctrl + shift + x
-	bspc node -k
-
-mod1 + shift + x
-	bspc node -k
-
-# Псевдо полное окно (без отступов)
-ctrl + m
-	bspc desktop -l next
-
-# if the current node is automatic, send it to the last manual, otherwise pull the last leaf
-ctrl + y
-	bspc query -N -n focused.automatic && bspc node -n last.!automatic || bspc node last.leaf -n focused
-
-# Сделать данную панель главной (самой большой слева)
-ctrl + g
-	bspc node -s biggest
-
-#
-# state/flags
-#
-
-# M+e - тиллинг, M+f - летающий режим, F11 - полный экран
-ctrl + e 
-	bspc node -t tiled
-
-F11
-    if [ -z "$(bspc query -N -n focused.tiled)" ]; then \                    
-	bspc node -t tiled; \
-    else \
-	bspc node -t fullscreen; \
-    fi
-
-# Floating - tilled focus (Переключение между режимами float - tilling)
-ctrl + shift + space
-    if [ -z "$(bspc query -N -n focused.tiled)" ]; then \                    
-        bspc node focused -t tiled; \                                           
-    else \                                                                      
-        bspc node focused -t floating; \                                        
-    fi
-
-#TODO set the node flags
-Mod + ctrl + {x,y,z}
-	bspc node -g {locked,sticky,private}
-
-
-#
-# focus/swap
-#
-
-# фокусироваться в заданную сторону; перенести окно в заданную сторону 
-#ctrl + {_,shift + }{Left,Up,Down,Right}
-#	bspc node -{f,s} {west,south,north,east}
-
-mod4 + {Left,Up,Down,Right}
-	bspc node -f {west,north,south,east}
-
-mod4 + ctrl + {Left,Up,Down,Right}
-	bspc node -s {west,north,south,east} --follow
-
-mod4 + shift + {Left,Up,Down,Right}
-	bspc node -m {west,north,south,east} --follow
-
-mod4 + r
-	bspc node @parent -R 90
-
-#TODO focus the node for the given path jump
-mod4 + {p,b,comma,period}
-	bspc node -f @{parent,brother,first,second}
-
-# focus the next/previous node in the current desktop
-#mod1 + {_,shift + }c
-#	bspc node -f {next,prev}.local
-
-# Поменять рабочий стол (workspace): предыдущий; следующий
-mod4 + bracket{left,right}
-	bspc desktop -f {prev,next}.local
-
-# Переключиться на предыдущую панель; Переключиться на на предыдущий рабочий стол 
-mod1 + grave
-	bspc {node,desktop} -f last
-
-# Переключаться на монитор
-mod4 + {F1,F2,F3}
-	bspc monitor -f ^{1,2,3}
-
-# Переключаться на рабочий стол
-mod4 + {1,2,3,4,5,6,7,8,9}
-	bspc desktop focused:^{1,2,3,4,5,6,7,8,9} -f
-
-# Перемещение по  на рабочий стол не теряя фокус окна
-mod4 + shift + {1,2,3,4,5,6,7,8,9}
-	bspc node -d focused:^{1,2,3,4,5,6,7,8,9} -f
-
-# Перемещение окон на рабочий стол и без перехода
-mod4 + mod1 + {1,2,3,4,5,6,7,8,9}
-	bspc node -d focused:^{1,2,3,4,5,6,7,8,9}
-
-# Сфокусироваться на предыдущей или следующей панели в истории фокусирования
-mod1 + {o,i}
-	bspc wm -h off; \
-	bspc node {older,newer} -f; \
-	bspc wm -h on
-
-# Переключаться между рабочими столами; Направлять окно на рабочий стол
-#mod1 + ctrl + {_,shift + } KP_{End,Down,Next,Left,Begin,Right,Home,Up,Prior}
-#	   bspc {desktop -f,node -d} '^{1-9,10}'
-
-mod4 + {_,shift + } KP_{End,Down,Next}
-	  bspc {desktop -f,node -d} '^{2-4}'
-
-
-mod4 + {_,shift + } KP_Insert
-	  bspc {desktop -f,node -d} '^1'
-
-# preselect
-#
-
-# Предпросмотр добавления окна
-mod1+ ctrl + {h,j,k,l}
-	bspc node -p {west,south,north,east}
-
-# Отмена предпросмотра
-mod1 + ctrl + space
-	bspc node -p cancel
-
-# Процентное соотношение (10%-90%) сколько новое окно будет занимать (от данного)
-mod1 + ctrl + {1-9}
-	bspc node -o 0.{1-9}
-
-# Закрыть предпросмотр для всего рабочего стола
-mod1 + ctrl + shift + space
-	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
-
-#
-# move/resize
-#
-
-# expand a window by moving one of its side outward
-mod1 + ctrl + {h,j,k,l}
-	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
-
-# contract a window by moving one of its side inward
-mod1 + ctrl + shift + {l,k,j,h}
-	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
-
-# Resize floating windows
-
-# move a floating window
-#ctrl + {Left,Down,Up,Right}
-#	bspc node -v {-20 0,0 20,0 -20,20 0}
